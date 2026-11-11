@@ -22,7 +22,7 @@ Nothing else is configured. To run a `kals` that is not on `PATH`:
 
 Diagnostics as you type, quick fixes, completion, hover, go to definition and type definition, references, rename, signature help, formatting (`kfmt`), outline, workspace symbols, folding, inlay hints.
 
-`languages/kairo/semantic_token_rules.json` underlines a call that resolves to one of several overloads or to a user-defined operator (`overloaded`), and a call that dispatches through `where` guards (`dispatched`, also italic). Override under `global_lsp_settings.semantic_token_rules`.
+`languages/kairo/semantic_token_rules.json` underlines a call that resolves to one of several overloads or to a user-defined operator (`overloaded`), and a call that dispatches through `where` guards (`dispatched`, also italic), calls into C/C++ and extension calls (italic), unsafe (bold), the `&` a call may write through (`mutates`, bold), deprecated uses (strikethrough) and constants (the enum-member colour). Override under `global_lsp_settings.semantic_token_rules`.
 
 ## Projects
 

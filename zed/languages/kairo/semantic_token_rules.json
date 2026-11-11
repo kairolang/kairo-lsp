@@ -1,12 +1,6 @@
 [
   {
     "token_modifiers": [
-      "overloaded"
-    ],
-    "underline": true
-  },
-  {
-    "token_modifiers": [
       "dispatched"
     ],
     "underline": true,
@@ -14,9 +8,53 @@
   },
   {
     "token_modifiers": [
+      "overloaded"
+    ],
+    "underline": true
+  },
+  {
+    "token_modifiers": [
       "extension"
     ],
     "font_style": "italic"
+  },
+  {
+    "token_modifiers": [
+      "ffi"
+    ],
+    "font_style": "italic"
+  },
+  {
+    "token_type": "operator",
+    "token_modifiers": [
+      "mutates"
+    ],
+    "font_weight": "bold",
+    "style": [
+      "constant",
+      "keyword"
+    ]
+  },
+  {
+    "token_modifiers": [
+      "unsafe"
+    ],
+    "font_weight": "bold"
+  },
+  {
+    "token_modifiers": [
+      "deprecated"
+    ],
+    "strikethrough": true
+  },
+  {
+    "token_modifiers": [
+      "constant"
+    ],
+    "style": [
+      "variant",
+      "constant"
+    ]
   },
   {
     "token_type": "selfKeyword",

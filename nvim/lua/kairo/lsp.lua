@@ -2,6 +2,7 @@
 --
 --   vim.g.kairo_lsp       false to leave the server alone (default: on)
 --   vim.g.kairo_kals      the binary (default: `kals` on PATH)
+--   vim.g.kairo_highlight_panics  true to mark calls that can panic (default: off)
 --
 -- Neovim 0.11+ (vim.lsp.config / vim.lsp.enable).
 
@@ -15,10 +16,14 @@ local function command()
   return exe
 end
 
--- Semantic-token marks only Kairo has. A call that picks one of several
--- overloads, or runs a user-defined operator, is underlined; one that
--- dispatches through `where` guards is underlined and italic. `default = true`
--- so a colorscheme or the user's own :highlight wins.
+-- Semantic-token marks only Kairo has, per kals's style table
+-- (Compiler/Spec/LanguageServer.md section 5): overloaded = underline;
+-- dispatched = underline + italic; extension and C/C++ (ffi) calls = italic;
+-- unsafe = bold; the `&` a call may write through (mutates) = bold in the
+-- warning colour; deprecated = strikethrough; constants = the enum-member
+-- colour; panics = dotted underline (sent only with
+-- vim.g.kairo_highlight_panics). `mutable` has no second shade here and is
+-- left undrawn. `default = true` so a colorscheme or :highlight wins.
 local function highlights()
   local set = function(name, opts)
     opts.default = true
@@ -32,6 +37,13 @@ local function highlights()
   set("@lsp.type.typeAlias.kairo", { link = "@type.definition" })
   set("@lsp.type.union.kairo", { link = "@type" })
   set("@lsp.type.enumMember.kairo", { link = "@constant" })
+  set("@lsp.mod.ffi.kairo", { italic = true })
+  set("@lsp.mod.unsafe.kairo", { bold = true })
+  local warn = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn", link = false })
+  set("@lsp.typemod.operator.mutates.kairo", { bold = true, fg = warn.fg })
+  set("@lsp.mod.deprecated.kairo", { strikethrough = true })
+  set("@lsp.mod.constant.kairo", { link = "@constant" })
+  set("@lsp.mod.panics.kairo", { underdotted = true })
 end
 
 function M.setup()
@@ -56,6 +68,7 @@ function M.setup()
     cmd = { exe },
     filetypes = { "kairo" },
     root_markers = { "kairo_compile.json", ".git" },
+    init_options = { highlightPanics = vim.g.kairo_highlight_panics == true },
   })
   vim.lsp.enable("kals")
 

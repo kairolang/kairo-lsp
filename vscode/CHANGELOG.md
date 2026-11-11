@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.0
+
+- Highlighting follows kals's style table: calls into C or C++ are italic (like extension calls, and not also underlined as overloads); unsafe calls, unsafe operations and the `unsafe` keyword are bold; the `&` of an argument the call may write through is bold and coloured; uses of deprecated declarations are struck through; constants take the enum-member colour.
+- New: `kairo.highlight.panics` (default off) asks kals to mark calls that can panic (`panics`). VS Code cannot draw the dotted underline for it, so it shows only where a theme or your own rule styles `*.panics:kairo`.
+
 ## 0.7.0
 
 - New: **View expanded macro** and **Expand macro here** in the quick-fix menu on a macro invocation, and the expansion on hover. The view opens beside the editor as a read-only Kairo document (`kairo.showMacroExpansion`, run by kals's code action).

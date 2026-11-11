@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/kairolang/kairo-lsp"
     },
-    "version": "0.7.0",
+    "version": "0.8.0",
     "publisher": "KSF",
     "engines": {
         "vscode": "^1.94.0"
@@ -90,6 +90,11 @@
                     "minimum": 0,
                     "maximum": 5000,
                     "description": "How long kals waits after the last keystroke before re-parsing the edited file alone: its syntax errors, and keyword and literal highlighting while it does not parse. Lands before the full analysis."
+                },
+                "kairo.highlight.panics": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Mark calls that can panic (`panics` semantic-token modifier). VS Code cannot draw the dotted underline the style table asks for, so nothing is drawn unless a theme or your own editor.semanticTokenColorCustomizations rule styles `*.panics:kairo`."
                 },
                 "kairo.kals.maxWorkers": {
                     "type": "number",
@@ -175,6 +180,19 @@
                     },
                     "*.extension:kairo": {
                         "italic": true
+                    },
+                    "*.ffi:kairo": {
+                        "italic": true
+                    },
+                    "*.unsafe:kairo": {
+                        "bold": true
+                    },
+                    "operator.mutates:kairo": {
+                        "bold": true,
+                        "foreground": "#E5A50A"
+                    },
+                    "*.deprecated:kairo": {
+                        "strikethrough": true
                     }
                 }
             },
@@ -228,7 +246,7 @@
             },
             {
                 "id": "unsafe",
-                "description": "Declared or used in an unsafe context."
+                "description": "A call to an unsafe function, an unsafe operation (`unsafe &x`, an unsafe dereference), or the `unsafe` keyword."
             },
             {
                 "id": "ffi",
@@ -245,6 +263,18 @@
             {
                 "id": "extension",
                 "description": "A call to a method or operator an `extend` block supplies."
+            },
+            {
+                "id": "mutates",
+                "description": "The `&` of a call argument through which the call may write (an `@inout` marker, or the address of a mutable)."
+            },
+            {
+                "id": "mutable",
+                "description": "A `var` binding and its uses."
+            },
+            {
+                "id": "panics",
+                "description": "A call that can panic (sent only with kairo.highlight.panics)."
             }
         ],
         "semanticTokenScopes": [
@@ -265,7 +295,8 @@
                         "entity.name.type.struct.kairo"
                     ],
                     "*.constant": [
-                        "variable.other.constant.kairo"
+                        "variable.other.enummember.kairo",
+                        "variable.other.enummember"
                     ],
                     "operator.overloaded": [
                         "keyword.operator.kairo"
