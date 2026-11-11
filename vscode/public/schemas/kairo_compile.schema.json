@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "kairo_compile.json",
+    "description": "The entry points of a Kairo project and the flags each is compiled with. Read by kals, the Kairo language server.",
+    "type": "object",
+    "required": ["entries"],
+    "properties": {
+        "version": { "type": "integer", "const": 1, "description": "Format version." },
+        "entries": {
+            "type": "array",
+            "description": "One per entry point: the file `kairo` is given. Every other file is reached through imports, and belongs to the entry that imports it.",
+            "items": {
+                "type": "object",
+                "required": ["entry"],
+                "properties": {
+                    "entry": { "type": "string", "description": "The entry file, relative to `directory`." },
+                    "args": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "description": "Every other argument, exactly as on the command line (for example \"-I\", \"include/\")."
+                    },
+                    "directory": {
+                        "type": "string",
+                        "description": "Where the command runs, relative to this file. \".\" when omitted."
+                    }
+                },
+                "additionalProperties": false
+            }
+        },
+        "default_args": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Flags for a file no entry reaches yet: it is checked as its own entry with these."
+        }
+    },
+    "additionalProperties": false
+}
