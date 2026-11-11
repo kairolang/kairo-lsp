@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0
+
+- New: **View expanded macro** and **Expand macro here** in the quick-fix menu on a macro invocation, and the expansion on hover. The view opens beside the editor as a read-only Kairo document (`kairo.showMacroExpansion`, run by kals's code action).
+- New: `kairo.kals.syntaxDebounceMs` (default 100): syntax errors in the edited file arrive from a parse of that file alone, before the type check. `kairo.kals.debounceMs` (the type check) now defaults to 150.
+- Progress is shown while kals indexes a workspace for the first time.
+
 ## 0.6.0
 
 - The extension now runs `kals`, the Kairo language server built from the compiler. The Python server and its virtual environment are gone, and so is the Python requirement.

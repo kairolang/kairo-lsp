@@ -4,7 +4,7 @@ Language support for [Kairo](https://kairolang.org), from `kals`, the Kairo lang
 
 ## Features
 
-- Diagnostics as you type, from the compiler itself, with its fix-its as quick fixes
+- Diagnostics as you type, from the compiler itself, with its fix-its as quick fixes. Syntax errors in the file you are editing come first (a parse of that file alone), the full type check follows
 - Completion: members after `.`, `->` and `::`, enum variants, names in scope
 - Semantic highlighting on top of the TextMate grammar
 - Go to definition, type definition and declaration; find references; rename
@@ -12,6 +12,8 @@ Language support for [Kairo](https://kairolang.org), from `kals`, the Kairo lang
 - Formatting with `kfmt` (format document, format on save)
 - Outline, workspace symbols, folding, selection ranges, inlay hints for inferred types
 - Import paths are links to the file they resolve to
+- Macros: hover an invocation to see what it expands to; the quick-fix menu offers **View expanded macro** (the expansion, read-only, beside the editor) and **Expand macro here** (replaces the invocation with it)
+- Progress while a workspace is first indexed
 
 A call in Kairo can be more than it looks, and the editor shows it: a call that picks one of several **overloads**, or runs a user-defined operator, is underlined; a call that dispatches at run time through **`where`** guards is underlined and italic; a call to a method an `extend` block adds is italic.
 
@@ -48,7 +50,8 @@ All optional.
 |---|---|---|
 | `kairo.kals.path` | (PATH) | run this `kals` instead |
 | `kairo.kals.args` | `[]` | extra arguments for `kals` |
-| `kairo.kals.debounceMs` | `80` | how long kals waits after the last keystroke before re-analysing |
+| `kairo.kals.debounceMs` | `150` | how long kals waits after the last keystroke before the type check |
+| `kairo.kals.syntaxDebounceMs` | `100` | how long kals waits before re-parsing the edited file alone (its syntax errors, and keyword highlighting while it does not parse) |
 | `kairo.kals.maxWorkers` | `2` | how many entry points kals may analyse at once |
 | `kairo.trace.server` | `off` | log LSP messages to the Kairo output channel |
 

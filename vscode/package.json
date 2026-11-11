@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/kairolang/kairo-lsp"
     },
-    "version": "0.6.0",
+    "version": "0.7.0",
     "publisher": "KSF",
     "engines": {
         "vscode": "^1.94.0"
@@ -79,10 +79,17 @@
                 },
                 "kairo.kals.debounceMs": {
                     "type": "number",
-                    "default": 80,
+                    "default": 150,
                     "minimum": 0,
                     "maximum": 5000,
-                    "description": "How long kals waits after the last keystroke before re-analysing."
+                    "description": "How long kals waits after the last keystroke before re-analysing (type checking: the full diagnostics, highlighting and navigation)."
+                },
+                "kairo.kals.syntaxDebounceMs": {
+                    "type": "number",
+                    "default": 100,
+                    "minimum": 0,
+                    "maximum": 5000,
+                    "description": "How long kals waits after the last keystroke before re-parsing the edited file alone: its syntax errors, and keyword and literal highlighting while it does not parse. Lands before the full analysis."
                 },
                 "kairo.kals.maxWorkers": {
                     "type": "number",
@@ -108,8 +115,21 @@
                 "command": "kairo.createProjectFile",
                 "title": "Create kairo_compile.json",
                 "category": "Kairo"
+            },
+            {
+                "command": "kairo.showMacroExpansion",
+                "title": "Show Macro Expansion",
+                "category": "Kairo"
             }
         ],
+        "menus": {
+            "commandPalette": [
+                {
+                    "command": "kairo.showMacroExpansion",
+                    "when": "false"
+                }
+            ]
+        },
         "breakpoints": [
             {
                 "language": "kairo"

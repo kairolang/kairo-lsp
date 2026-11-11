@@ -98,7 +98,8 @@ async function start(context: vscode.ExtensionContext): Promise<void> {
         ],
         outputChannel: output,
         initializationOptions: {
-            debounceMs: vscode.workspace.getConfiguration("kairo").get<number>("kals.debounceMs", 80),
+            debounceMs: vscode.workspace.getConfiguration("kairo").get<number>("kals.debounceMs", 150),
+            syntaxDebounceMs: vscode.workspace.getConfiguration("kairo").get<number>("kals.syntaxDebounceMs", 100),
             maxWorkers: vscode.workspace.getConfiguration("kairo").get<number>("kals.maxWorkers", 2),
         },
         synchronize: {
@@ -215,6 +216,49 @@ async function createProjectFile(): Promise<void> {
     await vscode.window.showTextDocument(target);
 }
 
+// --- macro expansion ----------------------------------------------------------
+
+// "View expanded macro" (a kals code action) runs kairo.showMacroExpansion
+// with [uri, range, text]: the invocation and what the preprocessor turns it
+// into. The text is shown in a read-only virtual document beside the editor,
+// one per invocation, so asking again for the same one reuses its tab.
+const EXPANSION_SCHEME = "kairo-expansion";
+const expansions = new Map<string, string>();
+const expansionChanged = new vscode.EventEmitter<vscode.Uri>();
+
+const expansionProvider: vscode.TextDocumentContentProvider = {
+    onDidChange: expansionChanged.event,
+    provideTextDocumentContent(uri: vscode.Uri): string {
+        return expansions.get(uri.toString()) ?? "";
+    },
+};
+
+interface LspRange {
+    start: { line: number; character: number };
+    end: { line: number; character: number };
+}
+
+async function showMacroExpansion(source: string, range: LspRange, text: string): Promise<void> {
+    if (typeof source !== "string" || typeof text !== "string" || !range?.start) {
+        return;
+    }
+    const file = vscode.Uri.parse(source);
+    const name = path.posix.basename(file.path);
+    // The path names the invocation; the query keeps two files of one name apart.
+    const uri = vscode.Uri.from({
+        scheme: EXPANSION_SCHEME,
+        path: `/${name}:${range.start.line + 1}:${range.start.character + 1} (expanded).k`,
+        query: file.toString(),
+    });
+    expansions.set(uri.toString(), text + "\n");
+    expansionChanged.fire(uri);
+    let doc = await vscode.workspace.openTextDocument(uri);
+    if (doc.languageId !== "kairo") {
+        doc = await vscode.languages.setTextDocumentLanguage(doc, "kairo");
+    }
+    await vscode.window.showTextDocument(doc, { viewColumn: vscode.ViewColumn.Beside, preview: true, preserveFocus: true });
+}
+
 // --- activation ---------------------------------------------------------------
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
@@ -229,6 +273,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         vscode.commands.registerCommand("kairo.restartLSP", () => start(context)),
         vscode.commands.registerCommand("kairo.showOutput", () => output.show()),
         vscode.commands.registerCommand("kairo.createProjectFile", createProjectFile),
+        vscode.commands.registerCommand("kairo.showMacroExpansion", showMacroExpansion),
+        vscode.workspace.registerTextDocumentContentProvider(EXPANSION_SCHEME, expansionProvider),
+        expansionChanged,
         vscode.workspace.onDidChangeConfiguration((e) => {
             if (e.affectsConfiguration("kairo.kals")) {
                 start(context);
