@@ -152,6 +152,9 @@
                     "*.dispatched:kairo": {
                         "underline": true,
                         "italic": true
+                    },
+                    "*.extension:kairo": {
+                        "italic": true
                     }
                 }
             },
@@ -180,7 +183,7 @@
             },
             {
                 "id": "builtinType",
-                "superType": "type",
+                "superType": "keyword",
                 "description": "A primitive type (i32, bool, usize)."
             },
             {
@@ -218,6 +221,10 @@
             {
                 "id": "constructor",
                 "description": "A constructor."
+            },
+            {
+                "id": "extension",
+                "description": "A call to a method or operator an `extend` block supplies."
             }
         ],
         "semanticTokenScopes": [
@@ -228,8 +235,8 @@
                         "variable.language.self.kairo"
                     ],
                     "builtinType": [
-                        "support.type.primitive.kairo",
-                        "storage.type.kairo"
+                        "keyword.other.kairo",
+                        "keyword"
                     ],
                     "typeAlias": [
                         "entity.name.type.alias.kairo"

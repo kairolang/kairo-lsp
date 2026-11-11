@@ -13,7 +13,7 @@ Language support for [Kairo](https://kairolang.org), from `kals`, the Kairo lang
 - Outline, workspace symbols, folding, selection ranges, inlay hints for inferred types
 - Import paths are links to the file they resolve to
 
-A call in Kairo can be more than it looks, and the editor shows it: a call that picks one of several **overloads**, or runs a user-defined operator, is underlined; a call that dispatches at run time through **`where`** guards is underlined and italic.
+A call in Kairo can be more than it looks, and the editor shows it: a call that picks one of several **overloads**, or runs a user-defined operator, is underlined; a call that dispatches at run time through **`where`** guards is underlined and italic; a call to a method an `extend` block adds is italic.
 
 ## Getting started
 

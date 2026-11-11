@@ -1,8 +1,46 @@
 [
-  { "token_modifiers": ["overloaded"], "underline": true },
-  { "token_modifiers": ["dispatched"], "underline": true, "font_style": "italic" },
-  { "token_type": "selfKeyword", "style": ["variable.special", "keyword"] },
-  { "token_type": "builtinType", "style": ["type.builtin", "type"] },
-  { "token_type": "typeAlias", "style": ["type"] },
-  { "token_type": "union", "style": ["type"] }
+  {
+    "token_modifiers": [
+      "overloaded"
+    ],
+    "underline": true
+  },
+  {
+    "token_modifiers": [
+      "dispatched"
+    ],
+    "underline": true,
+    "font_style": "italic"
+  },
+  {
+    "token_modifiers": [
+      "extension"
+    ],
+    "font_style": "italic"
+  },
+  {
+    "token_type": "selfKeyword",
+    "style": [
+      "variable.special",
+      "keyword"
+    ]
+  },
+  {
+    "token_type": "typeAlias",
+    "style": [
+      "type"
+    ]
+  },
+  {
+    "token_type": "union",
+    "style": [
+      "type"
+    ]
+  },
+  {
+    "token_type": "builtinType",
+    "style": [
+      "keyword"
+    ]
+  }
 ]
