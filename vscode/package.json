@@ -1,0 +1,266 @@
+{
+    "name": "kairo",
+    "displayName": "Kairo Language Support",
+    "description": "Kairo language support: the kals language server (diagnostics, completion, semantic highlighting, formatting) and syntax highlighting.",
+    "readme": "README.md",
+    "icon": "public/icons/kairo-v3.ico",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kairolang/kairo-lsp"
+    },
+    "version": "0.6.0",
+    "publisher": "KSF",
+    "engines": {
+        "vscode": "^1.94.0"
+    },
+    "categories": [
+        "Programming Languages",
+        "Formatters",
+        "Linters"
+    ],
+    "activationEvents": [
+        "workspaceContains:kairo_compile.json"
+    ],
+    "main": "dist/extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "kairo",
+                "firstLine": "^\\s*(?:fn\\s|ffi\\s|import\\s|eval\\s|struct\\s|class\\s|enum\\s|interface\\s|extend\\s|inline\\s\"(?:c\\+\\+|c|asm)\"|//|pub\\s|priv\\s|module\\s+[a-z])",
+                "configuration": "public/language-configuration.json",
+                "aliases": [
+                    "kairo",
+                    "Kairo"
+                ],
+                "extensions": [
+                    ".kairo",
+                    ".k",
+                    ".kh",
+                    ".kairoh"
+                ],
+                "icon": {
+                    "light": "public/icons/file-kairo-v3.svg",
+                    "dark": "public/icons/file-kairo-v3.svg"
+                }
+            }
+        ],
+        "grammars": [
+            {
+                "language": "kairo",
+                "scopeName": "source.kairo",
+                "path": "public/syntaxes/kairo.tmLanguage.json"
+            }
+        ],
+        "configuration": {
+            "title": "Kairo",
+            "properties": {
+                "kairo.kals.path": {
+                    "type": "string",
+                    "default": "",
+                    "markdownDescription": "The `kals` language server to run. Empty (the default) finds `kals` on `PATH`, which is where the Kairo toolchain installs it."
+                },
+                "kairo.kals.args": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [],
+                    "description": "Extra arguments for kals."
+                },
+                "kairo.trace.server": {
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "description": "Log the messages exchanged with kals to the Kairo output channel."
+                },
+                "kairo.kals.debounceMs": {
+                    "type": "number",
+                    "default": 80,
+                    "minimum": 0,
+                    "maximum": 5000,
+                    "description": "How long kals waits after the last keystroke before re-analysing."
+                },
+                "kairo.kals.maxWorkers": {
+                    "type": "number",
+                    "default": 2,
+                    "minimum": 1,
+                    "maximum": 8,
+                    "description": "How many entry points kals may analyse at once (a large project always runs one at a time)."
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "kairo.restartServer",
+                "title": "Restart Language Server",
+                "category": "Kairo"
+            },
+            {
+                "command": "kairo.showOutput",
+                "title": "Show Language Server Output",
+                "category": "Kairo"
+            },
+            {
+                "command": "kairo.createProjectFile",
+                "title": "Create kairo_compile.json",
+                "category": "Kairo"
+            }
+        ],
+        "breakpoints": [
+            {
+                "language": "kairo"
+            }
+        ],
+        "debuggers": [
+            {
+                "type": "cppvsdbg",
+                "label": "C++ (MSVC) Debugger (Kairo)",
+                "languages": [
+                    "kairo"
+                ]
+            },
+            {
+                "type": "cppdbg",
+                "label": "C++ (GDB/LLDB) Debugger (Kairo)",
+                "languages": [
+                    "kairo"
+                ]
+            }
+        ],
+        "configurationDefaults": {
+            "[kairo]": {
+                "editor.semanticHighlighting.enabled": true,
+                "editor.defaultFormatter": "KSF.kairo",
+                "editor.tabSize": 4,
+                "editor.insertSpaces": true,
+                "editor.quickSuggestions": {
+                    "other": "on",
+                    "comments": "off",
+                    "strings": "on"
+                },
+                "editor.inlayHints.enabled": "on"
+            },
+            "editor.semanticTokenColorCustomizations": {
+                "rules": {
+                    "*.overloaded:kairo": {
+                        "underline": true
+                    },
+                    "*.dispatched:kairo": {
+                        "underline": true,
+                        "italic": true
+                    }
+                }
+            },
+            "editor.tokenColorCustomizations": {
+                "textMateRules": [
+                    {
+                        "scope": "string.quoted.double.raw.kairo",
+                        "settings": {
+                            "foreground": "#f26d78"
+                        }
+                    }
+                ]
+            }
+        },
+        "jsonValidation": [
+            {
+                "fileMatch": "kairo_compile.json",
+                "url": "./public/schemas/kairo_compile.schema.json"
+            }
+        ],
+        "semanticTokenTypes": [
+            {
+                "id": "selfKeyword",
+                "superType": "keyword",
+                "description": "The `self` receiver."
+            },
+            {
+                "id": "builtinType",
+                "superType": "type",
+                "description": "A primitive type (i32, bool, usize)."
+            },
+            {
+                "id": "typeAlias",
+                "superType": "type",
+                "description": "A type alias."
+            },
+            {
+                "id": "union",
+                "superType": "struct",
+                "description": "A union."
+            }
+        ],
+        "semanticTokenModifiers": [
+            {
+                "id": "overloaded",
+                "description": "A call that resolves to one of several overloads, or a user-defined operator."
+            },
+            {
+                "id": "dispatched",
+                "description": "A call that dispatches at run time through `where` guards."
+            },
+            {
+                "id": "unsafe",
+                "description": "Declared or used in an unsafe context."
+            },
+            {
+                "id": "ffi",
+                "description": "Declared in C or C++."
+            },
+            {
+                "id": "constant",
+                "description": "A `const` or `eval` binding."
+            },
+            {
+                "id": "constructor",
+                "description": "A constructor."
+            }
+        ],
+        "semanticTokenScopes": [
+            {
+                "language": "kairo",
+                "scopes": {
+                    "selfKeyword": [
+                        "variable.language.self.kairo"
+                    ],
+                    "builtinType": [
+                        "support.type.primitive.kairo",
+                        "storage.type.kairo"
+                    ],
+                    "typeAlias": [
+                        "entity.name.type.alias.kairo"
+                    ],
+                    "union": [
+                        "entity.name.type.struct.kairo"
+                    ],
+                    "*.constant": [
+                        "variable.other.constant.kairo"
+                    ],
+                    "operator.overloaded": [
+                        "keyword.operator.kairo"
+                    ]
+                }
+            }
+        ]
+    },
+    "scripts": {
+        "build": "tsc -p .",
+        "watch": "tsc -w -p .",
+        "package": "vsce package",
+        "vscode:prepublish": "tsc -p ."
+    },
+    "devDependencies": {
+        "@types/node": "^20.5.7",
+        "@types/vscode": "^1.94.0",
+        "typescript": "^5.3.0",
+        "vsce": "^2.15.0"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^8.1.0"
+    },
+    "license": "Apache-2.0"
+}

@@ -27,8 +27,8 @@ temp/
 /build
 
 # Ignore dependencies
-/node_modules
-/dist
+/vscode/node_modules
+/vscode/dist
 
 # Ignore temporary files
 *.tmp
@@ -55,3 +55,9 @@ yarn.lock
 
 # Ignore Windows specific files
 Thumbs.db
+
+# Packaged extensions and editor build output
+*.vsix
+/zed/grammars/
+/zed/extension.wasm
+/zed/target/

@@ -1,0 +1,14 @@
+# What ships in the .vsix: package.json, README, LICENSE, CHANGELOG, dist/,
+# public/, and the runtime dependencies under node_modules/.
+src/**
+.vscode/**
+.vscode-test/**
+tsconfig.json
+package-lock.json
+*.vsix
+*.log
+*.tmp
+.DS_Store
+**/*.map
+**/*.ts
+!node_modules/**/*.d.ts

@@ -1,56 +1,39 @@
-# Kairo Language Support for Visual Studio Code
+# kairo-lsp
 
-Language server protocol (LSP) support for [Kairo](https://kairolang.org),
-providing real-time diagnostics, syntax highlighting, and editor integration.
+Editor support for [Kairo](https://kairolang.org). Every editor here is a thin client of the same server, `kals`, which ships with the Kairo toolchain; the server's source is in the compiler repository (`Analyzer/`).
 
-## Features
+| Directory | What it is |
+|---|---|
+| [`vscode/`](vscode/) | the Visual Studio Code extension |
+| [`zed/`](zed/) | the Zed extension |
+| [`nvim/`](nvim/) | the Neovim plugin |
+| [`tree-sitter-kairo/`](tree-sitter-kairo/) | the tree-sitter grammar Zed and Neovim highlight with |
 
-- Syntax highlighting for `.k` and `.kairo` files
-- Real-time error and warning diagnostics from the Kairo compiler
-- Hover information and go-to-definition (via clangd proxy)
-- Automatic compiler discovery from PATH
-- Automatic Python venv management for the language server
+## One rule for all three
 
-## Getting Started
+Install the Kairo toolchain so `kals`, `kfmt` and `kairo` are on `PATH`. Each client finds them there and needs no configuration; each has one setting to point at another binary.
 
-1. Install the [Kairo compiler](https://kairolang.org/install) and
-   ensure `kairo` is available on your PATH.
-2. Install this extension from the
-   [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=KSF.kairo).
-3. Open a `.k` file the language server starts automatically.
+## What you get
 
-Python 3.8+ must be available on your system. The extension will
-find it automatically; no manual configuration is needed.
+Diagnostics as you type with the compiler's fix-its as quick fixes, completion, semantic highlighting, hover, go to definition and type definition, references, rename, signature help, formatting with `kfmt`, outline, workspace symbols, folding and inlay hints.
 
-## Configuration
+Two marks are Kairo's own. A call that resolves to one of several overloads, or to a user-defined operator, carries the `overloaded` semantic-token modifier; a call that dispatches at run time through `where` guards carries `dispatched`. All three clients underline them.
 
-All settings are optional. The extension auto-discovers paths when possible.
+## Projects
 
-| Setting | Default | Description |
-|---|---|---|
-| `kairo.path` | `kairo` | Path to the Kairo compiler binary. Leave as `kairo` to auto-detect from PATH. |
-| `kairo.pythonPath` | `python` | Path to Python 3. Leave as `python` to auto-detect. |
-| `kairo.serverPath` | (auto) | Path to the LSP server script. Derived from the compiler location by default. |
+`kals` reads a project's entry points from `kairo_compile.json` in the workspace folder:
 
-## Commands
-
-- **Kairo: Restart Language Server** restart the LSP if it gets
-  into a bad state (`Ctrl+Shift+P` → "kairo: Restart Language Server")
-
-## Building from Source
-
-```bash
-git clone https://github.com/kairolang/kairo-lsp.git
-cd kairo-lsp
-npm install
-npm run build
-vsce package
+```json
+{
+  "version": 1,
+  "entries": [
+    { "entry": "src/main.k", "args": ["-I", "include/"] }
+  ]
+}
 ```
 
-Then install the `.vsix` via Extensions → "..." → "Install from VSIX".
+A file belongs to the entry that imports it; without the file each source file is checked on its own. Full description: <https://kairolang.org/docs/toolchain/kals/>.
 
-## Status
+## Changing the grammar or the highlighting
 
-This extension is under active development alongside the Kairo compiler.
-Some features are still stabilizing if you run into issues, restart
-the language server or [file a bug](https://github.com/kairolang/kairo-lsp/issues).
+`tree-sitter-kairo/src/` is generated from `grammar.js` (`tree-sitter generate`) and committed, because Zed and Neovim build from the generated C. `nvim/queries/kairo/` and `zed/languages/kairo/` hold the same highlighting scheme under each editor's capture names: change both together. `vscode/public/syntaxes/` is a separate TextMate grammar.
