@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/kairolang/kairo-lsp"
     },
-    "version": "0.8.0",
+    "version": "0.9.0",
     "publisher": "KSF",
     "engines": {
         "vscode": "^1.94.0"
@@ -95,6 +95,11 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Mark calls that can panic (`panics` semantic-token modifier). VS Code cannot draw the dotted underline the style table asks for, so nothing is drawn unless a theme or your own editor.semanticTokenColorCustomizations rule styles `*.panics:kairo`."
+                },
+                "kairo.kals.liveCheck": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Experimental. kals keeps one compiler process per entry and re-checks an edit in place: the edited file first, the files that import it in the background, instead of re-checking the whole project on every edit. Takes effect when the server restarts."
                 },
                 "kairo.kals.maxWorkers": {
                     "type": "number",

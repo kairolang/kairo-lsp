@@ -102,6 +102,7 @@ async function start(context: vscode.ExtensionContext): Promise<void> {
             syntaxDebounceMs: vscode.workspace.getConfiguration("kairo").get<number>("kals.syntaxDebounceMs", 100),
             maxWorkers: vscode.workspace.getConfiguration("kairo").get<number>("kals.maxWorkers", 2),
             highlightPanics: vscode.workspace.getConfiguration("kairo").get<boolean>("highlight.panics", false),
+            liveCheck: vscode.workspace.getConfiguration("kairo").get<boolean>("kals.liveCheck", false),
         },
         synchronize: {
             // A project file or a source file changed on disk (a checkout, a

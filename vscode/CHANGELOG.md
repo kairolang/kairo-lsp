@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.0
+
+- New setting `kairo.kals.liveCheck` (experimental, off by default): kals re-checks an edit in place, the edited file first and its importers in the background.
+
 ## 0.8.0
 
 - Highlighting follows kals's style table: calls into C or C++ are italic (like extension calls, and not also underlined as overloads); unsafe calls, unsafe operations and the `unsafe` keyword are bold; the `&` of an argument the call may write through is bold and coloured; uses of deprecated declarations are struck through; constants take the enum-member colour.
