@@ -102,7 +102,7 @@ async function start(context: vscode.ExtensionContext): Promise<void> {
             syntaxDebounceMs: vscode.workspace.getConfiguration("kairo").get<number>("kals.syntaxDebounceMs", 100),
             maxWorkers: vscode.workspace.getConfiguration("kairo").get<number>("kals.maxWorkers", 2),
             highlightPanics: vscode.workspace.getConfiguration("kairo").get<boolean>("highlight.panics", false),
-            liveCheck: vscode.workspace.getConfiguration("kairo").get<boolean>("kals.liveCheck", false),
+            liveCheck: vscode.workspace.getConfiguration("kairo").get<boolean>("kals.liveCheck", true),
         },
         synchronize: {
             // A project file or a source file changed on disk (a checkout, a
@@ -261,6 +261,42 @@ async function showMacroExpansion(source: string, range: LspRange, text: string)
     await vscode.window.showTextDocument(doc, { viewColumn: vscode.ViewColumn.Beside, preview: true, preserveFocus: true });
 }
 
+// --- completion after a deletion -----------------------------------------------
+
+// VS Code asks for completions as a word is typed, and on a deletion only
+// while the list is already showing. Backspacing into a name with the list
+// closed (after Escape, or after accepting an item and deleting part of it)
+// then shows nothing. kals answers a name from its index in well under a
+// frame, so the list is asked for again whenever a deletion leaves the cursor
+// in or right after a name (kairo.completion.triggerOnDelete).
+function suggestAfterDelete(e: vscode.TextDocumentChangeEvent): void {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor || e.document !== editor.document || e.document.languageId !== "kairo") {
+        return;
+    }
+    if (!vscode.workspace.getConfiguration("kairo").get<boolean>("completion.triggerOnDelete", true)) {
+        return;
+    }
+    // One deletion by the keyboard: not an undo, a multi-cursor edit, a
+    // format or a paste over a selection.
+    if (e.reason !== undefined || e.contentChanges.length !== 1 || editor.selections.length !== 1) {
+        return;
+    }
+    const change = e.contentChanges[0];
+    if (change.text !== "" || change.rangeLength === 0 || change.range.start.line !== change.range.end.line) {
+        return;
+    }
+    const at = change.range.start;
+    if (at.character === 0) {
+        return;
+    }
+    const before = e.document.lineAt(at.line).text.charAt(at.character - 1);
+    if (!/[A-Za-z0-9_]/.test(before)) {
+        return;
+    }
+    vscode.commands.executeCommand("editor.action.triggerSuggest");
+}
+
 // --- activation ---------------------------------------------------------------
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
@@ -278,6 +314,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         vscode.commands.registerCommand("kairo.showMacroExpansion", showMacroExpansion),
         vscode.workspace.registerTextDocumentContentProvider(EXPANSION_SCHEME, expansionProvider),
         expansionChanged,
+        vscode.workspace.onDidChangeTextDocument(suggestAfterDelete),
         vscode.workspace.onDidChangeConfiguration((e) => {
             if (e.affectsConfiguration("kairo.kals")) {
                 start(context);

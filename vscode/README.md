@@ -53,6 +53,8 @@ All optional.
 | `kairo.kals.debounceMs` | `150` | how long kals waits after the last keystroke before the type check |
 | `kairo.kals.syntaxDebounceMs` | `100` | how long kals waits before re-parsing the edited file alone (its syntax errors, and keyword highlighting while it does not parse) |
 | `kairo.kals.maxWorkers` | `2` | how many entry points kals may analyse at once |
+| `kairo.kals.liveCheck` | `true` | kals keeps one compiler process per entry and re-checks an edit in place; off: a new process re-checks the project on every edit |
+| `kairo.completion.triggerOnDelete` | `true` | show completions again after a deletion that leaves the cursor in or right after a name |
 | `kairo.trace.server` | `off` | log LSP messages to the Kairo output channel |
 
 To change how overloaded and `where`-dispatched calls are drawn:

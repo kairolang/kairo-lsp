@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.1
+
+- Completions are shown again after a deletion that leaves the cursor in or right after a name (`kairo.completion.triggerOnDelete`, on by default). VS Code asks on a deletion only while the list is already open.
+- `kairo.kals.liveCheck` is on by default, as it is in kals.
+
 ## 0.9.0
 
 - New setting `kairo.kals.liveCheck` (experimental, off by default): kals re-checks an edit in place, the edited file first and its importers in the background.
