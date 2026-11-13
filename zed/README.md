@@ -70,15 +70,7 @@ The queries in `languages/kairo/` follow the Neovim plugin's (`../nvim/queries/k
 
 Prerequisites Zed checks: an accepted license inside this directory (`LICENSE.txt`), a kebab-case id without "zed" or "extension" (`kairo`), a public repository, the grammar defined in `extension.toml`, the language server found rather than bundled.
 
-1. Push `kairo-lsp` with `tree-sitter-kairo/` in it. In `extension.toml` switch the grammar to this repository at a pushed commit that contains the current grammar:
-
-```toml
-[grammars.kairo]
-repository = "https://github.com/kairolang/kairo-lsp"
-path = "tree-sitter-kairo"
-rev = "<full commit sha>"
-```
-
+1. When `tree-sitter-kairo/` changes, push the change and set `rev` under `[grammars.kairo]` in `extension.toml` to that pushed commit (full sha).
 2. Check `version` in `extension.toml`, commit and push; the commit must be on a branch.
 3. Fork `zed-industries/extensions`, then:
 
