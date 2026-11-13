@@ -1,7 +1,8 @@
 -- Builds the tree-sitter parser from the grammar sources and attaches it.
 --
---   vim.g.kairo_grammar   path to tree-sitter-kairo (default: sibling directory)
---   vim.g.kairo_cc        C compiler (default: $CC, then cc / gcc / clang / zig)
+--   grammar   path to tree-sitter-kairo (default: ../tree-sitter-kairo, then ./tree-sitter-kairo)
+--   cc        C compiler (default: $CC, then cc / gcc / clang / zig)
+-- both set through require("kairo").setup{} (or vim.g.kairo_grammar / kairo_cc)
 
 local M = {}
 
@@ -28,8 +29,9 @@ end
 
 function M.grammar_dir()
   local root = plugin_root()
+  local cfg = require("kairo").config()
   local candidates = {
-    vim.g.kairo_grammar and vim.fs.normalize(vim.g.kairo_grammar) or nil,
+    cfg.grammar and vim.fs.normalize(cfg.grammar) or nil,
     vim.fs.joinpath(vim.fs.dirname(root), "tree-sitter-kairo"),
     vim.fs.joinpath(root, "tree-sitter-kairo"),
   }
@@ -79,7 +81,7 @@ function M.stale()
 end
 
 local function compiler()
-  local names = { vim.g.kairo_cc, vim.env.CC, "cc", "gcc", "clang", "zig" }
+  local names = { require("kairo").config().cc, vim.env.CC, "cc", "gcc", "clang", "zig" }
   for i = 1, 6 do
     local name = names[i]
     if name and name ~= "" and vim.fn.executable(name) == 1 then
@@ -105,12 +107,12 @@ function M.build(opts)
 
   local dir = M.grammar_dir()
   if not dir then
-    notify("tree-sitter-kairo not found; set vim.g.kairo_grammar to its path", vim.log.levels.ERROR)
+    notify("tree-sitter-kairo not found; set grammar in require('kairo').setup{}", vim.log.levels.ERROR)
     return
   end
   local cc = compiler()
   if not cc then
-    notify("no C compiler found; set vim.g.kairo_cc", vim.log.levels.ERROR)
+    notify("no C compiler found; set cc in require('kairo').setup{}", vim.log.levels.ERROR)
     return
   end
 
@@ -203,7 +205,7 @@ function M.attach(buf)
     M.build()
   elseif not warned then
     warned = true
-    notify("no parser installed; set vim.g.kairo_grammar and run :KairoBuildParser", vim.log.levels.WARN)
+    notify("no parser installed; set grammar in require('kairo').setup{} and run :KairoBuildParser", vim.log.levels.WARN)
   end
 end
 

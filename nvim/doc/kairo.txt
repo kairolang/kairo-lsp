@@ -1,0 +1,141 @@
+*kairo.txt*  Kairo language support for Neovim
+
+==============================================================================
+CONTENTS                                                         *kairo-contents*
+
+  1. Install ............................ |kairo-install|
+  2. Setup .............................. |kairo-setup|
+  3. Commands ........................... |kairo-commands|
+  4. Highlight groups ................... |kairo-highlights|
+  5. Troubleshooting .................... |kairo-troubleshooting|
+
+Requires Neovim 0.11+, a C compiler (cc, gcc, clang or zig) and the Kairo
+toolchain (`kals`, `kfmt`) on $PATH: https://kairolang.org/docs/install/
+
+==============================================================================
+1. INSTALL                                                       *kairo-install*
+
+The plugin is the `nvim/` directory of https://github.com/kairolang/kairo-lsp;
+the tree-sitter grammar it builds is `tree-sitter-kairo/`, next to it.
+
+lazy.nvim (the repository is cloned whole, `nvim/` is put on the runtimepath):
+>lua
+    {
+      "kairolang/kairo-lsp",
+      name = "kairo",
+      config = function(plugin)
+        vim.opt.rtp:append(plugin.dir .. "/nvim")
+        require("kairo").setup({})
+      end,
+    }
+<
+vim.pack (Neovim 0.12+):
+>lua
+    vim.pack.add({ "https://github.com/kairolang/kairo-lsp" })
+    vim.opt.rtp:append(vim.fn.stdpath("data") .. "/site/pack/core/opt/kairo-lsp/nvim")
+    require("kairo").setup({})
+<
+packer.nvim:
+>lua
+    use({
+      "kairolang/kairo-lsp",
+      rtp = "nvim",
+      config = function() require("kairo").setup({}) end,
+    })
+<
+Manual: clone the repository, then in init.lua
+>lua
+    vim.opt.rtp:prepend("~/kairo-lsp/nvim")
+<
+`setup()` is optional; the plugin works with defaults once it is on the
+runtimepath. If `nvim/` is ever its own repository, the plugin is the
+repository root and needs no `rtp` line.
+
+The parser is compiled on the first Kairo file you open (|:KairoBuildParser|).
+
+==============================================================================
+2. SETUP                                                          *kairo-setup*
+
+                                                              *kairo.setup()*
+require("kairo").setup({opts})
+
+Defaults:
+>lua
+    require("kairo").setup({
+      kals = { path = "kals", args = {} },  -- the server binary, extra arguments
+      lsp = true,                           -- false: never start the server
+      root_markers = { "kairo_compile.json", ".git" },
+      init_options = {                      -- sent to kals as initializationOptions
+        liveCheck = true,
+        debounceMs = 150,
+        syntaxDebounceMs = 100,
+        maxWorkers = 2,
+        highlightPanics = false,
+      },
+      grammar = nil,  -- path to tree-sitter-kairo (default: found next to the plugin)
+      cc = nil,       -- C compiler for the parser (default: $CC, cc, gcc, clang, zig)
+    })
+<
+`init_options` are the server's own settings; names and defaults are the ones
+of the VS Code extension (`kairo.kals.liveCheck` and so on) and are listed at
+https://kairolang.org/docs/toolchain/kals/ . They are read when the server
+starts: |:LspRestart| after changing them. Call setup() before the first Kairo
+buffer is opened.
+
+The older variables `vim.g.kairo_lsp`, `kairo_kals`, `kairo_highlight_panics`,
+`kairo_grammar` and `kairo_cc` still work; options passed to setup() win.
+
+==============================================================================
+3. COMMANDS                                                    *kairo-commands*
+
+                                                           *:KairoBuildParser*
+:KairoBuildParser    Compile the tree-sitter parser from `tree-sitter-kairo`
+                     and install it to stdpath("data")/site/parser/kairo.so.
+                     A rebuilt parser is loaded on the next start.
+
+                                                                 *:KairoFormat*
+:KairoFormat         Format the buffer with kfmt, through kals.
+
+Health check: `:checkhealth kairo`
+
+==============================================================================
+4. HIGHLIGHT GROUPS                                          *kairo-highlights*
+
+All are set with `default = true`: a colorscheme or |:highlight| wins.
+
+  @lsp.mod.overloaded.kairo      underline     call picking one of several
+                                               overloads, or a user operator
+  @lsp.mod.dispatched.kairo      underline, italic   call dispatching through
+                                               `where` guards
+  @lsp.mod.extension.kairo       italic        extension calls
+  @lsp.mod.ffi.kairo             italic        calls into C/C++
+  @lsp.mod.unsafe.kairo          bold
+  @lsp.mod.deprecated.kairo      strikethrough
+  @lsp.mod.panics.kairo          dotted underline (needs highlightPanics)
+  @lsp.typemod.operator.mutates.kairo   bold   the `&` a call may write through
+  @lsp.type.macro.kairo          amber         macro names and their `!`
+
+The `&` of a call argument is coloured by the parameter it binds to:
+
+  KairoAmpInout          bold green      `@inout`
+  KairoAmpPointer        bold            `*T`
+  KairoAmpUnsafe         bold purple     `unsafe *T`
+  KairoAmpUnsafeConst    bold italic purple   `unsafe *const T`
+  KairoAmpConst          bold grey-blue  `*const T`
+
+==============================================================================
+5. TROUBLESHOOTING                                      *kairo-troubleshooting*
+
+No server, and a warning when a Kairo file opens: `kals` is not executable.
+Put it on $PATH or set `kals.path`. `:checkhealth kairo` shows what was found.
+
+Plain colours, no semantic highlighting: the server is not attached
+(`:checkhealth vim.lsp`), or the colorscheme sets these groups itself.
+
+"no parser installed": no C compiler, or the grammar sources were not found.
+Set `grammar` and `cc`, then run |:KairoBuildParser|.
+
+`.k` opens with another filetype: Neovim's builtin table claims `.k`; the
+plugin overrides it when it loads. Check `:set filetype?`.
+
+ vim:tw=78:ts=8:ft=help:norl:
