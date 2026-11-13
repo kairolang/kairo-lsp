@@ -17,6 +17,8 @@ Language support for [Kairo](https://kairolang.org), from `kals`, the Kairo lang
 
 A call in Kairo can be more than it looks, and the editor shows it: a call that picks one of several **overloads**, or runs a user-defined operator, is underlined; a call that dispatches at run time through **`where`** guards is underlined and italic; a call to a method an `extend` block adds is italic.
 
+The `&` of a call argument is coloured by the parameter it binds to, so a call site shows what the callee may do with it: green for `@inout`, the theme's operator colour for `*T`, purple for `unsafe *T`, grey-blue for `*const T`, purple italic for `unsafe *const T`. Macro invocations, their `!` included, are amber.
+
 ## Getting started
 
 1. Install the [Kairo toolchain](https://kairolang.org/install). It puts `kairo`, `kals` and `kfmt` on your `PATH`, and that is where this extension finds them.
@@ -54,6 +56,7 @@ All optional.
 | `kairo.kals.syntaxDebounceMs` | `100` | how long kals waits before re-parsing the edited file alone (its syntax errors, and keyword highlighting while it does not parse) |
 | `kairo.kals.maxWorkers` | `2` | how many entry points kals may analyse at once |
 | `kairo.kals.liveCheck` | `true` | kals keeps one compiler process per entry and re-checks an edit in place; off: a new process re-checks the project on every edit |
+| `kairo.kals.highlightPanics` | `false` | mark calls that can panic (the `panics` modifier) |
 | `kairo.completion.triggerOnDelete` | `true` | show completions again after a deletion that leaves the cursor in or right after a name |
 | `kairo.trace.server` | `off` | log LSP messages to the Kairo output channel |
 
