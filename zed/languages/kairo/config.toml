@@ -1,6 +1,6 @@
 name = "Kairo"
 grammar = "kairo"
-path_suffixes = ["k"]
+path_suffixes = ["k", "kairo", "kh", "kairoh"]
 line_comments = ["// ", "/// "]
 block_comment = ["/* ", " */"]
 tab_size = 4

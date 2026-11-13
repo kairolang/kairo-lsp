@@ -1,5 +1,53 @@
 [
   {
+    "token_type": "operator",
+    "token_modifiers": [
+      "pointer",
+      "unsafe",
+      "readonly"
+    ],
+    "foreground_color": "#B44FD6",
+    "font_weight": "bold",
+    "font_style": "italic"
+  },
+  {
+    "token_type": "operator",
+    "token_modifiers": [
+      "pointer",
+      "unsafe"
+    ],
+    "foreground_color": "#B44FD6",
+    "font_weight": "bold"
+  },
+  {
+    "token_type": "operator",
+    "token_modifiers": [
+      "pointer",
+      "readonly"
+    ],
+    "foreground_color": "#7088A8",
+    "font_weight": "bold"
+  },
+  {
+    "token_type": "operator",
+    "token_modifiers": [
+      "inout"
+    ],
+    "foreground_color": "#2EA043",
+    "font_weight": "bold"
+  },
+  {
+    "token_type": "operator",
+    "token_modifiers": [
+      "pointer"
+    ],
+    "font_weight": "bold"
+  },
+  {
+    "token_type": "macro",
+    "foreground_color": "#D4900A"
+  },
+  {
     "token_modifiers": [
       "dispatched"
     ],
@@ -29,11 +77,7 @@
     "token_modifiers": [
       "mutates"
     ],
-    "font_weight": "bold",
-    "style": [
-      "constant",
-      "keyword"
-    ]
+    "font_weight": "bold"
   },
   {
     "token_modifiers": [

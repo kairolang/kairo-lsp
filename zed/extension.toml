@@ -1,19 +1,15 @@
 id = "kairo"
 name = "Kairo"
-version = "0.2.0"
+version = "0.3.0"
 schema_version = 1
-authors = ["Dhruvan Kartik <kartd01@purdue.edu>"]
-description = "Kairo language support: the kals language server (diagnostics, completion, semantic highlighting, formatting), syntax highlighting, outline, brackets, indentation, inline C++ injection."
+authors = ["Dhruvan Kartik"]
+description = "Kairo language support: the kals language server (diagnostics, completion, semantic highlighting, formatting), syntax highlighting, outline, brackets, indentation and text objects."
 repository = "https://github.com/kairolang/kairo-lsp"
 
-# The grammar is ../tree-sitter-kairo in this repository. Zed builds a grammar
-# from a git revision, never from a working tree, so this names a pushed
-# commit. UNTIL kairo-lsp is pushed with tree-sitter-kairo/ in it, this points
-# at the identical grammar in the compiler repository; afterwards switch to
-#
-#   repository = "https://github.com/kairolang/kairo-lsp"
-#   path = "tree-sitter-kairo"
-#   rev = "<the commit that added it>"
+# Zed builds a grammar from a git revision, never from a working tree. The
+# grammar lives in tree-sitter-kairo/ of kairo-lsp; until a commit containing
+# it is pushed, this names the identical grammar in the compiler repository.
+# See "Publishing" in README.md for the lines to switch to.
 [grammars.kairo]
 repository = "https://github.com/kairolang/kairo"
 path = "Extras/LSPClients/tree-sitter-kairo"
