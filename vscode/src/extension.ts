@@ -101,7 +101,8 @@ async function start(context: vscode.ExtensionContext): Promise<void> {
             debounceMs: vscode.workspace.getConfiguration("kairo").get<number>("kals.debounceMs", 150),
             syntaxDebounceMs: vscode.workspace.getConfiguration("kairo").get<number>("kals.syntaxDebounceMs", 100),
             maxWorkers: vscode.workspace.getConfiguration("kairo").get<number>("kals.maxWorkers", 2),
-            highlightPanics: vscode.workspace.getConfiguration("kairo").get<boolean>("highlight.panics", false),
+            highlightPanics: vscode.workspace.getConfiguration("kairo").get<boolean>("kals.highlightPanics", false)
+                || vscode.workspace.getConfiguration("kairo").get<boolean>("highlight.panics", false),
             liveCheck: vscode.workspace.getConfiguration("kairo").get<boolean>("kals.liveCheck", true),
         },
         synchronize: {

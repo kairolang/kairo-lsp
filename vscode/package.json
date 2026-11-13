@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/kairolang/kairo-lsp"
     },
-    "version": "0.9.1",
+    "version": "0.9.2",
     "publisher": "KSF",
     "engines": {
         "vscode": "^1.94.0"
@@ -91,10 +91,16 @@
                     "maximum": 5000,
                     "description": "How long kals waits after the last keystroke before re-parsing the edited file alone: its syntax errors, and keyword and literal highlighting while it does not parse. Lands before the full analysis."
                 },
-                "kairo.highlight.panics": {
+                "kairo.kals.highlightPanics": {
                     "type": "boolean",
                     "default": false,
                     "description": "Mark calls that can panic (`panics` semantic-token modifier). VS Code cannot draw the dotted underline the style table asks for, so nothing is drawn unless a theme or your own editor.semanticTokenColorCustomizations rule styles `*.panics:kairo`."
+                },
+                "kairo.highlight.panics": {
+                    "type": "boolean",
+                    "default": false,
+                    "deprecationMessage": "Renamed to kairo.kals.highlightPanics, the name every client uses.",
+                    "description": "Old name of kairo.kals.highlightPanics."
                 },
                 "kairo.kals.liveCheck": {
                     "type": "boolean",
@@ -198,8 +204,30 @@
                         "bold": true
                     },
                     "operator.mutates:kairo": {
+                        "bold": true
+                    },
+                    "operator.inout:kairo": {
                         "bold": true,
-                        "foreground": "#E5A50A"
+                        "foreground": "#2EA043"
+                    },
+                    "operator.pointer:kairo": {
+                        "bold": true
+                    },
+                    "operator.pointer.unsafe:kairo": {
+                        "bold": true,
+                        "foreground": "#B44FD6"
+                    },
+                    "operator.pointer.unsafe.readonly:kairo": {
+                        "bold": true,
+                        "italic": true,
+                        "foreground": "#B44FD6"
+                    },
+                    "operator.pointer.readonly:kairo": {
+                        "bold": true,
+                        "foreground": "#7088A8"
+                    },
+                    "macro:kairo": {
+                        "foreground": "#D4900A"
                     },
                     "*.deprecated:kairo": {
                         "strikethrough": true
@@ -276,7 +304,15 @@
             },
             {
                 "id": "mutates",
-                "description": "The `&` of a call argument through which the call may write (an `@inout` marker, or the address of a mutable)."
+                "description": "The `&` of a call argument through which the call may write (an `@inout` marker, or the address of a mutable passed to a `*T`)."
+            },
+            {
+                "id": "inout",
+                "description": "The `&` of a call argument bound to an `@inout` parameter (or a C++ `T&`)."
+            },
+            {
+                "id": "pointer",
+                "description": "The `&` of a call argument bound to a pointer parameter; with `unsafe` for `unsafe *T`, with `readonly` for `*const T`."
             },
             {
                 "id": "mutable",
@@ -284,7 +320,7 @@
             },
             {
                 "id": "panics",
-                "description": "A call that can panic (sent only with kairo.highlight.panics)."
+                "description": "A call that can panic (sent only with kairo.kals.highlightPanics)."
             }
         ],
         "semanticTokenScopes": [

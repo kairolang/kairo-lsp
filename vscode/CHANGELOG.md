@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.2
+
+- `kairo.highlight.panics` is renamed `kairo.kals.highlightPanics`, the name every client uses; the old name still works and is marked deprecated.
+- The `&` of a call argument is coloured by its parameter (`@inout` green, `*T` the operator colour, `unsafe *T` purple, `*const T` grey-blue), and macro names are amber.
+
 ## 0.9.1
 
 - Completions are shown again after a deletion that leaves the cursor in or right after a name (`kairo.completion.triggerOnDelete`, on by default). VS Code asks on a deletion only while the list is already open.
