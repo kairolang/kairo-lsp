@@ -1,0 +1,32 @@
+# Kairo for Helix. Merge into ~/.config/helix/languages.toml (README.md).
+
+[[language]]
+name = "kairo"
+scope = "source.kairo"
+injection-regex = "kairo"
+file-types = ["k", "kairo", "kh", "kairoh"]
+roots = ["kairo_compile.json"]
+comment-tokens = ["//", "///"]
+block-comment-tokens = { start = "/*", end = "*/" }
+indent = { tab-width = 4, unit = "    " }
+language-servers = ["kals"]
+
+[language.auto-pairs]
+'(' = ')'
+'{' = '}'
+'[' = ']'
+'"' = '"'
+"'" = "'"
+
+# kals, the Kairo language server, from the toolchain on PATH. `config` is sent
+# as the server's initialization options; the names and defaults are the ones
+# the other clients use (kairo.kals.* in VS Code).
+[language-server.kals]
+command = "kals"
+args = []
+config = { liveCheck = true, debounceMs = 150, syntaxDebounceMs = 100, maxWorkers = 2, highlightPanics = false }
+
+# The grammar is tree-sitter-kairo/ of this repository, at a pushed commit.
+[[grammar]]
+name = "kairo"
+source = { git = "https://github.com/kairolang/kairo-lsp", rev = "d707ed9284c10942fd176393eeff35710d000ade", subpath = "tree-sitter-kairo" }

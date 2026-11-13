@@ -7,9 +7,10 @@ Editor support for [Kairo](https://kairolang.org). Every editor here is a thin c
 | [`vscode/`](vscode/) | the Visual Studio Code extension |
 | [`zed/`](zed/) | the Zed extension |
 | [`nvim/`](nvim/) | the Neovim plugin |
-| [`tree-sitter-kairo/`](tree-sitter-kairo/) | the tree-sitter grammar Zed and Neovim highlight with |
+| [`helix/`](helix/) | the Helix configuration and queries |
+| [`tree-sitter-kairo/`](tree-sitter-kairo/) | the tree-sitter grammar Zed, Neovim and Helix highlight with |
 
-## One rule for all three
+## One rule for every client
 
 Install the Kairo toolchain so `kals`, `kfmt` and `kairo` are on `PATH`. Each client finds them there and needs no configuration; each has one setting to point at another binary.
 
@@ -17,7 +18,7 @@ Install the Kairo toolchain so `kals`, `kfmt` and `kairo` are on `PATH`. Each cl
 
 Diagnostics as you type with the compiler's fix-its as quick fixes, completion, semantic highlighting, hover, go to definition and type definition, references, rename, signature help, formatting with `kfmt`, outline, workspace symbols, folding and inlay hints.
 
-Two marks are Kairo's own. A call that resolves to one of several overloads, or to a user-defined operator, carries the `overloaded` semantic-token modifier; a call that dispatches at run time through `where` guards carries `dispatched`. All three clients underline them.
+Two marks are Kairo's own. A call that resolves to one of several overloads, or to a user-defined operator, carries the `overloaded` semantic-token modifier; a call that dispatches at run time through `where` guards carries `dispatched`. VS Code, Zed and Neovim underline them; Helix does not apply semantic tokens.
 
 ## Projects
 
